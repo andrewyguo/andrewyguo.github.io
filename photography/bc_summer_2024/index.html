@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Photography Collection</title>
+    <meta name="author" content="Andrew Guo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+  </head>
+  <body>
+    <nav class="site-nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-name">Andrew Guo</a>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Research</a>
+          <a href="/fun/" class="nav-link active">For Fun</a>
+        </div>
+      </div>
+    </nav>
+    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+      <tr style="padding:0px">
+        <td style="padding:0px">
+          
+          <div style="margin-bottom: 20px;">
+            <a href="/photography/" style="text-decoration:none; color:#1772d0;">&larr; Back to gallery</a>
+          </div>
+          
+          <h1 class="page-title" id="collection-title" style="margin-bottom: 10px;">Collection</h1>
+          <p id="collection-desc" style="text-align:center; color:#666; margin-bottom: 40px;"></p>
+
+          <div class="photo-grid" id="photo-grid">
+            <!-- Populated by JS -->
+          </div>
+
+        </td>
+      </tr>
+    </tbody></table>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+      <div class="lightbox-close" id="lightbox-close">&times;</div>
+      <div class="lightbox-prev" id="lightbox-prev">&#10094;</div>
+      <div class="lightbox-next" id="lightbox-next">&#10095;</div>
+      <div class="lightbox-content">
+        <img id="lightbox-img" src="">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script>
+      const IMAGE_BASE = "https://photos.andrewguo.com/photography";
+      
+      // Auto-detect slug from URL (e.g. /photography/iceland/ -> iceland)
+      const pathParts = window.location.pathname.replace(/\/$/, '').split('/');
+      const slug = pathParts[pathParts.length - 1] === '_template' ? 'iceland' : pathParts[pathParts.length - 1];
+
+      let photoData = [];
+      let currentIndex = 0;
+
+      fetch('../collections.yaml')
+        .then(response => response.text())
+        .then(text => {
+          const data = jsyaml.load(text) || [];
+          const collection = data.find(c => c.slug === slug);
+          if (!collection) {
+            document.getElementById('collection-title').innerText = 'Collection Not Found';
+            return;
+          }
+
+          document.title = collection.title + ' - Andrew Guo';
+          document.getElementById('collection-title').innerText = collection.title;
+          if (collection.description) {
+            document.getElementById('collection-desc').innerText = collection.description;
+          }
+          
+          photoData = collection.photos;
+          const grid = document.getElementById('photo-grid');
+          
+          photoData.forEach((photo, index) => {
+            const img = document.createElement('img');
+            img.src = `${IMAGE_BASE}/${slug}/${photo.file}`;
+            img.loading = "lazy";
+            img.onclick = () => openLightbox(index);
+            grid.appendChild(img);
+          });
+        });
+
+      // Lightbox Logic
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxCaption = document.getElementById('lightbox-caption');
+
+      function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function updateLightbox() {
+        if (photoData.length === 0) return;
+        const photo = photoData[currentIndex];
+        lightboxImg.src = `${IMAGE_BASE}/${slug}/${photo.file}`;
+        lightboxCaption.innerText = photo.caption || '';
+      }
+
+      function nextPhoto(e) {
+        if (e) e.stopPropagation();
+        currentIndex = (currentIndex + 1) % photoData.length;
+        updateLightbox();
+      }
+
+      function prevPhoto(e) {
+        if (e) e.stopPropagation();
+        currentIndex = (currentIndex - 1 + photoData.length) % photoData.length;
+        updateLightbox();
+      }
+
+      // Event Listeners
+      document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+      document.getElementById('lightbox-next').addEventListener('click', nextPhoto);
+      document.getElementById('lightbox-prev').addEventListener('click', prevPhoto);
+      
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox || e.target === document.querySelector('.lightbox-content')) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') nextPhoto();
+        if (e.key === 'ArrowLeft') prevPhoto();
+      });
+
+      // Swipe support for mobile
+      let touchstartX = 0;
+      let touchendX = 0;
+      lightbox.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
+      lightbox.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        if (touchendX < touchstartX - 50) nextPhoto();
+        if (touchendX > touchstartX + 50) prevPhoto();
+      });
+    </script>
+  </body>
+</html>
