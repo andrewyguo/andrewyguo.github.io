@@ -2,7 +2,7 @@
   title: BC Summer 2024
   location: BC
   date: 2024-07
-  cover: burarrd_inlet_2.jpg
+  cover: manning_park_tree.jpg
   description: ""
   photos:
     - file: burarrd_inlet_2.jpg
@@ -11,3 +11,25 @@
     - file: manning_park_stars.png
     - file: manning_park_tree.jpg
     - file: mount_baker.jpg
+      caption: Mount Baker from Fraser Highway
+- slug: 2024_asia
+  title: Asia 2024
+  location: Asia
+  date: 2024-05
+  cover: cn01.jpg
+  description: ""
+  photos:
+    - file: cn01.jpg
+    - file: jp01.jpg
+    - file: jp02.jpg
+    - file: jp03.jpg
+    - file: jp04.jpg
+    - file: jp05.jpg
+    - file: sg01.jpg
+    - file: sg02.jpg
+    - file: sg03.jpg
+    - file: th01.jpg
+    - file: th02.jpg
+    - file: tw01.png
+    - file: tw02.jpg
+    - file: tw03.jpg
