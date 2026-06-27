@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Andrew Guo - Photography</title>
+    <meta name="author" content="Andrew Guo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+  </head>
+  <body>
+    <nav class="site-nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-name">Andrew Guo</a>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Research</a>
+          <a href="/fun/" class="nav-link active">For Fun</a>
+        </div>
+      </div>
+    </nav>
+    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+      <tr style="padding:0px">
+        <td style="padding:0px">
+          
+          <div style="margin-bottom: 20px;">
+            <a href="/fun/" style="text-decoration:none; color:#1772d0;">&larr; Back to For Fun</a>
+          </div>
+
+          <h1 class="page-title" style="margin-top: 10px;">Photography</h1>
+          <div class="cards-grid" id="collections-grid">
+            <!-- Populated by JS -->
+          </div>
+        </td>
+      </tr>
+    </tbody></table>
+
+    <script>
+      const IMAGE_BASE = "https://photos.andrewguo.com/photography"; // Update this if needed
+      
+      fetch('collections.json')
+        .then(response => response.json())
+        .then(data => {
+          const grid = document.getElementById('collections-grid');
+          if (data.length === 0) {
+            grid.innerHTML = '<p style="text-align:center; color:#666; grid-column: 1 / -1;">No collections yet. Use the add-collection.sh script to add some!</p>';
+            return;
+          }
+          data.forEach(collection => {
+            const card = document.createElement('a');
+            card.href = collection.slug + '/';
+            card.className = 'card';
+            
+            const coverUrl = `${IMAGE_BASE}/${collection.slug}/${collection.cover}`;
+            
+            card.innerHTML = `
+              <div class="card-image-wrap">
+                <img src="${coverUrl}" alt="${collection.title}" loading="lazy" onerror="this.parentElement.innerHTML='📸'">
+              </div>
+              <div class="card-label">
+                <strong>${collection.title}</strong><br>
+                <span style="font-size:14px; color:#666;">${collection.location} • ${collection.date}</span>
+              </div>
+            `;
+            grid.appendChild(card);
+          });
+        })
+        .catch(err => console.error('Error loading collections:', err));
+    </script>
+  </body>
+</html>
