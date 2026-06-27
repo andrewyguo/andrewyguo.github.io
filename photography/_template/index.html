@@ -47,6 +47,7 @@
       </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <script>
       const IMAGE_BASE = "https://photos.andrewguo.com/photography";
       
@@ -57,9 +58,10 @@
       let photoData = [];
       let currentIndex = 0;
 
-      fetch('../collections.json')
-        .then(response => response.json())
-        .then(data => {
+      fetch('../collections.yaml')
+        .then(response => response.text())
+        .then(text => {
+          const data = jsyaml.load(text) || [];
           const collection = data.find(c => c.slug === slug);
           if (!collection) {
             document.getElementById('collection-title').innerText = 'Collection Not Found';
