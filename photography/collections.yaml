@@ -1,4 +1,4 @@
-- slug: bc_summer_2024
+- slug: 2024_bc_summer
   title: BC Summer 2024
   location: BC
   date: 2024-07
@@ -16,16 +16,15 @@
   title: Asia 2024
   location: Asia
   date: 2024-05
-  cover: cn01.jpg
+  cover: sg01.jpg
   description: ""
   photos:
-    - file: cn01.jpg
+    - file: sg01.jpg
     - file: jp01.jpg
     - file: jp02.jpg
     - file: jp03.jpg
     - file: jp04.jpg
     - file: jp05.jpg
-    - file: sg01.jpg
     - file: sg02.jpg
     - file: sg03.jpg
     - file: th01.jpg
@@ -33,3 +32,4 @@
     - file: tw01.png
     - file: tw02.jpg
     - file: tw03.jpg
+    - file: cn01.jpg
