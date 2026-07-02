@@ -247,11 +247,18 @@ span.highlight {
 }
 
 .card-label {
-  padding: 16px;
+  padding: 16px 16px 8px;
   text-align: center;
   font-size: 16px;
   font-weight: 400;
   border-top: 1px solid #eee;
+}
+
+.card-desc {
+  padding: 0 16px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
 }
 
 /* Photography Grid */
